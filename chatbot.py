@@ -2,7 +2,7 @@ import openai
 import os
 import time
 
-openai.api_key = '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'
+openai.api_key = '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'
 
 def get_completion_from_messages(messages, model="gpt-3.5-turbo", temperature=0):
     response = openai.ChatCompletion.create(
@@ -27,29 +27,34 @@ def chat():
         Greet the user considering the time of day by fetching it from the internet.\
     """
     context += [{'role': 'system', 'content': f'{greet_prompt}'}]
-    response = get_completion_from_messages(context)
-    print(f"{response}")
+    try: 
+        response = get_completion_from_messages(context)
+        print(f"{response}")
 
-    while True:
+        while True:
+            try:
+                text = input("\n[YOU]: ")
+                context += [{'role': 'user', 'content': f'{text}'}]
+                if text.lower().__contains__('bye'):
+                    break
+                response = get_completion_from_messages(context)
+                print(f"[KAMLESH]: {response}\n")
+                context += [{'role': 'system', 'content': f"{response}"}]
+            except openai.error.RateLimitError:
+                time.sleep(60)
+                print("[KAMLESH]: I apologize, can you repeat that?")
+
+        bye_prompt = f"""
+            Say your goodbyes to the user, thank them for chatting with you and giving you their time.
+            Wish them for a good day or evening appropriately.
+        """
+        context += [{'role': 'system', 'content': f"{bye_prompt}"}]
         try:
-            text = input("\n[YOU]: ")
-            context += [{'role': 'user', 'content': f'{text}'}]
-            if text.lower().__contains__('bye'):
-                break
             response = get_completion_from_messages(context)
-            print(f"[KAMLESH]: {response}\n")
-            context += [{'role': 'system', 'content': f"{response}"}]
+            print(f"KAMLESH: {response}")
         except openai.error.RateLimitError:
-            time.sleep(60)
-            print("[KAMLESH]: I apologize, can you repeat that?")
-
-    bye_prompt = f"""
-        Say your goodbyes to the user, thank them for chatting with you and giving you their time.
-        Wish them for a good day or evening appropriately.
-    """
-    context += [{'role': 'system', 'content': f"{bye_prompt}"}]
-    response = get_completion_from_messages(context)
-    print(f"KAMLESH: {response}")
-
+            print("Rate limit reached")
+    except openai.error.RateLimitError:
+        print("Rate limit reached")
 
 chat()
