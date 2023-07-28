@@ -2,7 +2,7 @@ import openai
 import os
 import time
 
-openai.api_key = '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'
+openai.api_key = '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'
 
 def get_completion_from_messages(messages, model="gpt-3.5-turbo", temperature=0):
     response = openai.ChatCompletion.create(
@@ -19,7 +19,7 @@ def chat():
     the user\'s past experiences and user\'s mindset in order to accurately and pleasantly \
     respond to the user. \
                  make sure reframe this in your own words when greeting the user\
-                 if user inputs something other than therapy related, say that you're not trained for such replies
+               
     """}, ]  # accumulate messages
 
     greet_prompt = f"""
@@ -51,7 +51,7 @@ def chat():
         context += [{'role': 'system', 'content': f"{bye_prompt}"}]
         try:
             response = get_completion_from_messages(context)
-            print(f"KAMLESH: {response}")
+            print(f"[KAMLESH]: {response}")
         except openai.error.RateLimitError:
             print("Rate limit reached")
     except openai.error.RateLimitError:
