@@ -19,7 +19,7 @@ def chat():
     the user\'s past experiences and user\'s mindset in order to accurately and pleasantly \
     respond to the user. \
                  make sure reframe this in your own words when greeting the user\
-               
+               if user inputs something other than therapy related, say that you're not trained for such replies
     """}, ]  # accumulate messages
 
     greet_prompt = f"""
